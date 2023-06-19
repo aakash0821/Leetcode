@@ -1,121 +1,79 @@
 class Solution {
 public:
-    void isAdd(vector<vector<int>>& board, int n, vector<vector<string>>& vec, vector<string>& temp)
-    {
-        for(int i=0;i<n;i++)
-        {
-            string test="";
-            for(int j=0;j<n;j++)
-            {
-                if(board[i][j]==1)
-                {
-                    test+="Q";
-                }
-                else
-                {
-                    test+=".";
-                }
-            }
-            temp.push_back(test);
-        }
-        vec.push_back(temp);
-        temp.clear();
-        return;
-        
-       
-    }
     
-    bool IsSafe(int row, int col, vector<vector<int>>& board, int n)
+    bool isSafe(vector<string>& board, int row, int col, int n)
     {
-        int x=row;
-        int y=col;
-        
-        for(int i=0;i<n;i++)
+        int drow=row;
+        int dcol=col;
+    
+        while(col>=0) 
         {
-            if(board[row][i]==1 || board[i][col]==1)
+            if(board[row][col]=='Q')
             {
                 return false;
             }
-                
+            col--;
         }
-        
-        x=row;
-        y=col;
-        while(x>=0 && y>=0)
+    
+        row=drow;
+        col=dcol;
+        while(row>=0 && col>=0)
         {
-            if(board[x][y]==1)
+            if(board[row][col]=='Q')
             {
                 return false;
             }
-            x--;
-            y--;
+            row--;
+            col--;
         }
-        
-        x=row;
-        y=col;
-        while(x<n && y<n)
+    
+        row=drow;
+        col=dcol;
+        while(row<n && col>=0)
         {
-            if(board[x][y]==1)
+            if(board[row][col]=='Q')
             {
                 return false;
             }
-            x++;
-            y++;
+            row++;
+            col--;
         }
-        x=row;
-        y=col;
-        while(x>=0 && y<n)
-        {
-            if(board[x][y]==1)
-            {
-                return false;
-            }
-            x--;
-            y++;
-        }
-        
-        x=row;
-        y=col;
-        while(x<n && y>=0)
-        {
-            if(board[x][y]==1)
-            {
-                return false;
-            }
-            x++;
-            y--;
-        }
-        
-        return true;
-        
+    return true;
+    
     }
-    void solve(int col, vector<vector<int>>& board, vector<vector<string>>& ans, int n, vector<string>& temp)
+
+    void Solve(vector<vector<string>>& ans, vector<string>& board, int col, int n)
     {
         if(col==n)
         {
-            isAdd(board, n, ans, temp);
+            ans.push_back(board);
             return;
         }
-        
+
         for(int row=0;row<n;row++)
         {
-            if(IsSafe(row, col, board, n))
+            if(isSafe(board, row, col, n))
             {
-                board[row][col]=1;
-                solve(col+1, board, ans, n, temp);
-                board[row][col]=0;
+                board[row][col]='Q';
+                Solve(ans, board, col+1, n);
+                board[row][col]='.';
             }
         }
+        return;
     }
+   
     vector<vector<string>> solveNQueens(int n) {
         
-        vector<vector<int>> board(n, vector<int>(n, 0));
-        vector<vector<string>> vec;
-        vector<string> temp;
+        vector<vector<string>> ans;
+        vector<string> board(n);
+        string s(n,'.');
         
-        solve(0, board, vec, n, temp);
-        
-        return vec;
+        for(int i=0;i<n;i++)
+        {
+            board[i]=s;
+        }
+        Solve(ans, board, 0, n);
+        return ans;
         
         
     }
