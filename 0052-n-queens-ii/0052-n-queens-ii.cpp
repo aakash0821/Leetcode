@@ -1,93 +1,82 @@
 class Solution {
 public:
-    bool IsSafe(int row, int col, vector<vector<int>>& board, int n)
+    
+    
+    bool isSafe(vector<string>& board, int row, int col, int n)
     {
-        int x=row;
-        int y=col;
+        int dupr=row;
+        int dcol=col;
         
-        for(int i=0;i<n;i++)
+        
+        while(col>=0)
         {
-            if(board[row][i]==1 || board[i][col]==1)
+            if(board[row][col]=='Q')
             {
                 return false;
             }
-                
+            col--;
         }
         
-        x=row;
-        y=col;
-        while(x>=0 && y>=0)
+        
+        col=dcol;
+        row=dupr;
+        
+        while(row>=0 && col>=0)
         {
-            if(board[x][y]==1)
+            if(board[row][col]=='Q')
             {
                 return false;
             }
-            x--;
-            y--;
+            row--;
+            col--;
         }
         
-        x=row;
-        y=col;
-        while(x<n && y<n)
+         col=dcol;
+        row=dupr;
+        
+        while(row<n && col>=0)
         {
-            if(board[x][y]==1)
+            if(board[row][col]=='Q')
             {
                 return false;
             }
-            x++;
-            y++;
+            row++;
+            col--;
         }
-        x=row;
-        y=col;
-        while(x>=0 && y<n)
-        {
-            if(board[x][y]==1)
-            {
-                return false;
-            }
-            x--;
-            y++;
-        }
-        
-        x=row;
-        y=col;
-        while(x<n && y>=0)
-        {
-            if(board[x][y]==1)
-            {
-                return false;
-            }
-            x++;
-            y--;
-        }
-        
         return true;
-        
     }
-    void solve(int col, vector<vector<int>>& board,  int n,  int& total)
+    
+    
+    void Solve(vector<string>& board, int col, int n, int& ans)
     {
         if(col==n)
         {
-            total++;
-            return;
+            ans++;
+            return ;
         }
-        
+        //int ans=0;
         for(int row=0;row<n;row++)
         {
-            if(IsSafe(row, col, board, n))
+            if(isSafe(board, row, col, n))
             {
-                board[row][col]=1;
-                solve(col+1, board, n, total);
-                board[row][col]=0;
+                board[row][col]='Q';
+               Solve(board, col+1, n, ans);
+                board[row][col]='.';
             }
+           
         }
+        return;
     }
+    
     int totalNQueens(int n) {
-        vector<vector<int>> board(n, vector<int>(n, 0));
-        
-        int total=0;
-        solve(0, board,  n,  total);
-        
-        return total;;
+       vector<string> board(n);
+       string s(n,'.');
+        for(int i=0;i<n;i++)
+        {
+            board[i]=s;
+        }
+        int ans=0;
+        Solve(board, 0, n, ans);
+        return ans;
     }
 };
