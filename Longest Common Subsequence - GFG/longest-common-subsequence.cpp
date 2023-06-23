@@ -13,7 +13,7 @@ class Solution
     
     int ans(vector<vector<int>>& dp, int i1, int i2, string s1, string s2)
     {
-        if(i1<0 || i2<0)
+        if(i1==0 || i2==0)
         {
             return 0;
         }
@@ -23,7 +23,7 @@ class Solution
             return dp[i1][i2];
         }
         
-        if(s1[i1]==s2[i2])
+        if(s1[i1-1]==s2[i2-1])
         {
             return dp[i1][i2]=1+ans(dp, i1-1, i2-1, s1, s2);
         }
@@ -32,8 +32,8 @@ class Solution
     }
     int lcs(int x, int y, string s1, string s2)
     {
-        vector<vector<int>> dp(x, vector<int>(y, -1));
-        return ans(dp, x-1,y-1,s1,s2);
+        vector<vector<int>> dp(x+1, vector<int>(y+1, -1));
+        return ans(dp, x,y,s1,s2);
     }
 };
 
